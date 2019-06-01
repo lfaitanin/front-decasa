@@ -15,14 +15,13 @@ class List extends Component{
         }
         this.onSubmit = this.onSubmit.bind(this)
         this.onChange = this.onChange.bind(this)
-    }
+        }
     componentDidMount(){
         this.getAll()
     }
     onChange = e => {
-        this.setState ({
+        this.setState({
             [e.target.name]: e.target.value
-    
         })
     }
     getAll = () =>{
@@ -44,6 +43,7 @@ class List extends Component{
         addItem(this.state.name, this.state.price, this.state.description).then(() => {
             this.getAll()
         })
+        console.log(this.state.price);
         this.setState({
             name: '',
             price: '',
@@ -83,7 +83,15 @@ class List extends Component{
     onDelete = (val, e) => {
         e.preventDefault()
         deleteItem(val)
-        this.getAll()
+
+        var data = [...this.state.items]
+        data.filter(function(item, index) {
+            if (item.id === val) {
+                data.splice(index, 1)
+            }
+            return true
+        })
+        this.setState({ items: [...data] })
     }
     render() {
         return(
@@ -98,6 +106,7 @@ class List extends Component{
                                 placeholder="Nome"
                                 className="form-control"
                                 id="name"
+                                name="name"
                                 value={this.state.name || ''}
                                 onChange={this.onChange.bind(this)}
                                 />
@@ -110,6 +119,7 @@ class List extends Component{
                                 placeholder="Preço"
                                 className="form-control"
                                 id="price"
+                                name="price"
                                 value={this.state.price || ''}
                                 onChange={this.onChange.bind(this)}
                                 />
@@ -122,6 +132,7 @@ class List extends Component{
                                 placeholder="Descrição"
                                 className="form-control"
                                 id="description"
+                                name="description"
                                 value={this.state.description || ''}
                                 onChange={this.onChange.bind(this)} 
                                 />
@@ -167,7 +178,7 @@ class List extends Component{
                                     <button href=""
                                     className="btn btn-danger"
                                     disable={this.state.editDisable}
-                                    onClick={this.onEdit.bind(
+                                    onClick={this.onDelete.bind(
                                         this,
                                         item.id
 
